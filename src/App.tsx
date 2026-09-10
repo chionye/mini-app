@@ -5,6 +5,7 @@ import heroImg from "./assets/hero.png";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "./assets/vite.svg";
 import "./App.css";
+import { NewFile } from "./NewFile";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -18,10 +19,11 @@ function App() {
           <img src={viteLogo} className='vite' alt='Vite log' />
         </div>
         <div>
-          <h1>Get started</h1>
+          <NewFile name='Rocki' age={25} />
           <p>
             Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
           </p>
+          <NewFile name='Chuks' age={30} />
         </div>
         <button
           type='button'

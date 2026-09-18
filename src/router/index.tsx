@@ -1,0 +1,18 @@
+import { Home } from "../pages/Home";
+import { About } from "../pages/About";
+import { Contact } from "../pages/Contact";
+
+export const Routes = [
+  {
+    path: "/",
+    element: <Home />,
+  },
+  {
+    path: "/about",
+    element: <About />,
+  },
+  {
+    path: "/contact",
+    element: <Contact />,
+  },
+];

@@ -3,8 +3,13 @@
 export interface PostData {
   userId: number;
   id: number;
-  title: string;
-  body: string;
+  title?: string;
+  body?: string;
+}
+
+export interface UpdatePostDataProp {
+  title?: string;
+  body?: string;
 }
 
 export interface FormInputProp {

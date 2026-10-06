@@ -3,6 +3,18 @@
 import type { UpdatePostDataProp } from "../../types";
 import api from "./index";
 
+//GET POST PUT PATCH DELETE
+
+const createPost = async (data: UpdatePostDataProp) => {
+  try {
+    const response = await api.post("/posts", data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 const updatePostData = async ({
   id,
   data,
@@ -19,4 +31,14 @@ const updatePostData = async ({
   }
 };
 
-export { updatePostData };
+const deletePost = async (id: number) => {
+  try {
+    const response = await api.delete(`/posts/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export { updatePostData, deletePost, createPost };

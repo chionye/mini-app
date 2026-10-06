@@ -3,9 +3,14 @@
 import { useEffect, useState } from "react";
 import { Buttons } from "../components/ui/Buttons";
 import { FormInput } from "../components/ui/FormInput";
-import type { PostData } from "../types";
+import type { PostData, UpdatePostDataProp } from "../types";
 import { fetchPostData } from "../service/api/query";
-import { updatePostData } from "../service/api/mutation";
+import {
+  updatePostData,
+  deletePost,
+  createPost,
+} from "../service/api/mutation";
+import { Modal } from "../components/ui/Modal";
 
 //methods - GET, POST, PUT, PATCH AND DELETE
 
@@ -15,6 +20,10 @@ import { updatePostData } from "../service/api/mutation";
 
 export const Home = () => {
   const [posts, setPosts] = useState<PostData[]>([]); //keep the current state of a particular data
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [title, setTitle] = useState<string>("");
+  const [body, setBody] = useState<string>("");
+  const [userId, setUserId] = useState<number>(1);
 
   useEffect(() => {
     //fetch posts
@@ -55,14 +64,48 @@ export const Home = () => {
       });
   };
 
+  const handleDelete = (id: number) => {
+    deletePost(id)
+      .then(() => {
+        setPosts((prevPosts) => {
+          return prevPosts.filter((post) => post.id !== id);
+        });
+        console.log("Post deleted");
+      })
+      .catch((err) => {
+        console.error("Error deleting post", err);
+      });
+  };
+
+  const handleSubmit = () => {
+    const payload: UpdatePostDataProp = {
+      title,
+      body,
+      userId,
+    };
+    createPost(payload)
+      .then(() => {
+        console.log("Post created");
+      })
+      .catch((err) => {
+        console.error("Error creating post", err);
+      });
+  };
+
   return (
     <div className='flex flex-col gap-4 w-full'>
+      <Buttons.solid
+        color='bg-blue-400'
+        hover='bg-blue-500'
+        onClick={() => setIsModalOpen(true)}>
+        New Post
+      </Buttons.solid>
       {posts.map((post: PostData) => {
         return (
           <div className='flex justify-between items-end gap-2' key={post.id}>
             <div className='flex gap-2 items-center justify-center w-full'>
               <FormInput
-                label='title'
+                label={`title-${post.id}`}
                 type='text'
                 name='title'
                 id='title'
@@ -72,7 +115,7 @@ export const Home = () => {
                 }
               />
               <FormInput
-                label='body'
+                label={`body-${post.id}`}
                 type='text'
                 name='body'
                 id='body'
@@ -92,13 +135,50 @@ export const Home = () => {
               <Buttons.outline
                 color='bg-red-400'
                 hover='bg-red-500'
-                textColor='bg-red-400'>
+                textColor='bg-red-400'
+                onClick={() => handleDelete(post.id)}>
                 Delete
               </Buttons.outline>
             </div>
           </div>
         );
       })}
+      {isModalOpen && (
+        <Modal onClose={() => setIsModalOpen(false)}>
+          <div className='flex flex-col gap-2 items-center justify-center w-full'>
+            <FormInput
+              label={`title`}
+              type='text'
+              name='title'
+              id='title'
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+            <FormInput
+              label={`body`}
+              type='text'
+              name='body'
+              id='body'
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+            />
+            <FormInput
+              label={`userId`}
+              type='number'
+              name='userId'
+              id='userId'
+              value={userId.toString()}
+              onChange={(e) => setUserId(Number(e.target.value))}
+            />
+            <Buttons.solid
+              color='bg-blue-400'
+              hover='bg-blue-500'
+              onClick={handleSubmit}>
+              Submit
+            </Buttons.solid>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

@@ -5,7 +5,7 @@ import { Buttons } from "../components/ui/Buttons";
 import { FormInput } from "../components/ui/FormInput";
 import type { PostData } from "../types";
 import { fetchPostData } from "../service/api/query";
-import { updatePostData } from "../service/api/mutation";
+import { updatePostData, deletePost } from "../service/api/mutation";
 
 //methods - GET, POST, PUT, PATCH AND DELETE
 
@@ -55,6 +55,19 @@ export const Home = () => {
       });
   };
 
+  const handleDelete = (id: number) => {
+    deletePost(id)
+      .then(() => {
+        setPosts((prevPosts) => {
+          return prevPosts.filter((post) => post.id !== id);
+        });
+        console.log("Post deleted");
+      })
+      .catch((err) => {
+        console.error("Error deleting post", err);
+      });
+  };
+
   return (
     <div className='flex flex-col gap-4 w-full'>
       {posts.map((post: PostData) => {
@@ -62,7 +75,7 @@ export const Home = () => {
           <div className='flex justify-between items-end gap-2' key={post.id}>
             <div className='flex gap-2 items-center justify-center w-full'>
               <FormInput
-                label='title'
+                label={`title-${post.id}`}
                 type='text'
                 name='title'
                 id='title'
@@ -72,7 +85,7 @@ export const Home = () => {
                 }
               />
               <FormInput
-                label='body'
+                label={`body-${post.id}`}
                 type='text'
                 name='body'
                 id='body'
@@ -92,7 +105,8 @@ export const Home = () => {
               <Buttons.outline
                 color='bg-red-400'
                 hover='bg-red-500'
-                textColor='bg-red-400'>
+                textColor='bg-red-400'
+                onClick={() => handleDelete(post.id)}>
                 Delete
               </Buttons.outline>
             </div>

@@ -5,6 +5,16 @@ import api from "./index";
 
 //GET POST PUT PATCH DELETE
 
+const createPost = async (data: UpdatePostDataProp) => {
+  try {
+    const response = await api.post("/posts", data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 const updatePostData = async ({
   id,
   data,
@@ -31,4 +41,4 @@ const deletePost = async (id: number) => {
   }
 };
 
-export { updatePostData, deletePost };
+export { updatePostData, deletePost, createPost };

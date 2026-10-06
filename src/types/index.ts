@@ -8,6 +8,7 @@ export interface PostData {
 }
 
 export interface UpdatePostDataProp {
+  userId?: number;
   title?: string;
   body?: string;
 }
